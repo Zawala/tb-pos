@@ -1,0 +1,33 @@
+{
+  "generator-jhipster": {
+    "applicationType": "monolith",
+    "authenticationType": "jwt",
+    "baseName": "tbPos",
+    "buildTool": "maven",
+    "cacheProvider": null,
+    "clientFramework": "vue",
+    "clientTestFrameworks": [],
+    "clientTheme": "spacelab",
+    "clientThemeVariant": "primary",
+    "creationTimestamp": 1779939245069,
+    "databaseType": "sql",
+    "devDatabaseType": "h2Disk",
+    "enableHibernateCache": null,
+    "enableTranslation": false,
+    "entities": [],
+    "feignClient": null,
+    "jhipsterVersion": "8.11.0",
+    "jwtSecretKey": "MGM5NWM3ZTM2M2ZlZTQ0Y2VjNjkxODhiZmE0OTI1ZjM3NGE2ZTRhNmUyN2NiOTNiMDg1MjdjMzQ3NTliYzI0NDc1MTg3Mjg2MzU0NDg2NTkxYWNkYjZiYTgzZWFhZTMxNTViOWM1YjRmZjRkYWU3N2EwNDljYjIyZjQ4OTY1YmY=",
+    "microfrontend": null,
+    "microfrontends": [],
+    "nativeLanguage": "en",
+    "packageName": "com.tb.pos",
+    "prodDatabaseType": "postgresql",
+    "reactive": true,
+    "serverPort": null,
+    "serviceDiscoveryType": null,
+    "syncUserWithIdp": null,
+    "testFrameworks": [],
+    "withAdminUi": true
+  }
+}
