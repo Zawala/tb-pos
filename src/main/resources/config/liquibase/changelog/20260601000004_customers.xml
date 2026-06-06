@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="20260601000004-1" author="pos">
+        <createTable tableName="customers">
+            <column name="id" type="${uuidType}">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="phone" type="varchar(20)">
+                <constraints unique="true" uniqueConstraintName="ux_customer_phone"/>
+            </column>
+            <column name="email" type="varchar(255)"/>
+            <column name="created_at" type="timestamp"/>
+        </createTable>
+
+        <addForeignKeyConstraint
+            baseTableName="sales"
+            baseColumnNames="customer_id"
+            constraintName="fk_sale_customer"
+            referencedTableName="customers"
+            referencedColumnNames="id"/>
+
+        <createTable tableName="loyalty_accounts">
+            <column name="id" type="${uuidType}">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="customer_id" type="${uuidType}">
+                <constraints unique="true" nullable="false" uniqueConstraintName="ux_loyalty_customer"/>
+            </column>
+            <column name="points_balance" type="int" defaultValueNumeric="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="total_spend_usd" type="numeric(19,4)" defaultValueNumeric="0"/>
+        </createTable>
+
+        <addForeignKeyConstraint
+            baseTableName="loyalty_accounts"
+            baseColumnNames="customer_id"
+            constraintName="fk_loyalty_customer"
+            referencedTableName="customers"
+            referencedColumnNames="id"/>
+    </changeSet>
+</databaseChangeLog>

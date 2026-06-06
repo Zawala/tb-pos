@@ -1,57 +1,57 @@
 <template>
-  <div>
-    <h2 id="configuration-page-heading" data-cy="configurationPageHeading">Configuration</h2>
+  <div class="py-4">
+    <h2 class="text-xl font-semibold mb-4" id="configuration-page-heading" data-cy="configurationPageHeading">Configuration</h2>
 
     <div v-if="allConfiguration && configuration">
-      <span>Filter (by prefix)</span> <input type="text" v-model="filtered" class="form-control" />
-      <h3>Spring configuration</h3>
-      <table class="table table-striped table-bordered table-responsive d-table" aria-describedby="Configuration">
-        <thead>
-          <tr>
-            <th class="w-40" @click="changeOrder('prefix')" scope="col">
-              <span>Prefix</span>
-            </th>
-            <th class="w-60" @click="changeOrder('properties')" scope="col">
-              <span>Properties</span>
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="entry in filteredConfiguration" :key="entry.prefix">
-            <td>
-              <span>{{ entry.prefix }}</span>
-            </td>
-            <td>
-              <div class="row" v-for="key in keys(entry.properties)" :key="key">
-                <div class="col-md-4">{{ key }}</div>
-                <div class="col-md-8">
-                  <span class="float-right badge-secondary break">{{ entry.properties[key] }}</span>
-                </div>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <div v-for="key in keys(allConfiguration)" :key="key">
-        <h4>
-          <span>{{ key }}</span>
-        </h4>
-        <table class="table table-sm table-striped table-bordered table-responsive d-table" aria-describedby="Properties">
-          <thead>
+      <div class="mb-4">
+        <TextInput type="text" v-model="filtered" placeholder="Filter by prefix..." class="w-full max-w-sm" />
+      </div>
+
+      <h3 class="text-base font-semibold mb-2">Spring configuration</h3>
+      <div class="overflow-x-auto mb-6">
+        <table class="w-full text-sm" aria-describedby="Configuration">
+          <thead class="bg-surface-gray-2 text-ink-gray-6">
             <tr>
-              <th class="w-40" scope="col">Property</th>
-              <th class="w-60" scope="col">Value</th>
+              <th class="px-3 py-2 text-left w-2/5 cursor-pointer hover:bg-surface-gray-3" @click="changeOrder('prefix')" scope="col">
+                Prefix
+              </th>
+              <th class="px-3 py-2 text-left w-3/5 cursor-pointer hover:bg-surface-gray-3" @click="changeOrder('properties')" scope="col">
+                Properties
+              </th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="item of allConfiguration[key]" :key="item.key">
-              <td class="break">{{ item.key }}</td>
-              <td class="break">
-                <span class="float-right badge-secondary break">{{ item.val }}</span>
+            <tr v-for="entry in filteredConfiguration" :key="entry.prefix" class="border-t border-outline-gray-1">
+              <td class="px-3 py-2 align-top">{{ entry.prefix }}</td>
+              <td class="px-3 py-2">
+                <div v-for="key in keys(entry.properties)" :key="key" class="flex gap-2 text-xs mb-1">
+                  <span class="w-2/5 font-medium text-ink-gray-6">{{ key }}</span>
+                  <span class="w-3/5 break-all text-ink-gray-5">{{ entry.properties[key] }}</span>
+                </div>
               </td>
             </tr>
           </tbody>
         </table>
+      </div>
+
+      <div v-for="key in keys(allConfiguration)" :key="key" class="mb-4">
+        <h4 class="text-sm font-semibold mb-2">{{ key }}</h4>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm" aria-describedby="Properties">
+            <thead class="bg-surface-gray-2 text-ink-gray-6">
+              <tr>
+                <th class="px-3 py-2 text-left w-2/5" scope="col">Property</th>
+                <th class="px-3 py-2 text-left w-3/5" scope="col">Value</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="item of allConfiguration[key]" :key="item.key" class="border-t border-outline-gray-1">
+                <td class="px-3 py-2 break-all">{{ item.key }}</td>
+                <td class="px-3 py-2 break-all">{{ item.val }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>

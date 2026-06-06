@@ -1,0 +1,130 @@
+{
+  "hash": "84697468",
+  "configHash": "efd6d45e",
+  "lockfileHash": "f77ffc63",
+  "browserHash": "da307c0b",
+  "optimized": {
+    "vue": {
+      "src": "../../../../../node_modules/vue/dist/vue.runtime.esm-bundler.js",
+      "file": "vue.js",
+      "fileHash": "79b43ada",
+      "needsInterop": false
+    },
+    "vue-router": {
+      "src": "../../../../../node_modules/vue-router/dist/vue-router.mjs",
+      "file": "vue-router.js",
+      "fileHash": "41e2b7f7",
+      "needsInterop": false
+    },
+    "pinia": {
+      "src": "../../../../../node_modules/pinia/dist/pinia.mjs",
+      "file": "pinia.js",
+      "fileHash": "dac01f89",
+      "needsInterop": false
+    },
+    "axios": {
+      "src": "../../../../../node_modules/axios/index.js",
+      "file": "axios.js",
+      "fileHash": "2d4b7474",
+      "needsInterop": false
+    },
+    "dayjs": {
+      "src": "../../../../../node_modules/dayjs/dayjs.min.js",
+      "file": "dayjs.js",
+      "fileHash": "2204ee1f",
+      "needsInterop": true
+    },
+    "frappe-ui": {
+      "src": "../../../../../node_modules/frappe-ui/src/index.ts",
+      "file": "frappe-ui.js",
+      "fileHash": "6f7e2815",
+      "needsInterop": false
+    },
+    "highlight.js/lib/core": {
+      "src": "../../../../../node_modules/highlight.js/es/core.js",
+      "file": "highlight__js_lib_core.js",
+      "fileHash": "ef1dd350",
+      "needsInterop": false
+    },
+    "debug": {
+      "src": "../../../../../node_modules/debug/src/browser.js",
+      "file": "debug.js",
+      "fileHash": "3cac7a5a",
+      "needsInterop": true
+    },
+    "@fortawesome/fontawesome-svg-core": {
+      "src": "../../../../../node_modules/@fortawesome/fontawesome-svg-core/index.mjs",
+      "file": "@fortawesome_fontawesome-svg-core.js",
+      "fileHash": "abdcd379",
+      "needsInterop": false
+    },
+    "@fortawesome/free-solid-svg-icons": {
+      "src": "../../../../../node_modules/@fortawesome/free-solid-svg-icons/index.mjs",
+      "file": "@fortawesome_free-solid-svg-icons.js",
+      "fileHash": "1a8b35cc",
+      "needsInterop": false
+    },
+    "@fortawesome/vue-fontawesome": {
+      "src": "../../../../../node_modules/@fortawesome/vue-fontawesome/index.es.js",
+      "file": "@fortawesome_vue-fontawesome.js",
+      "fileHash": "8e9d8649",
+      "needsInterop": false
+    },
+    "@vuelidate/core": {
+      "src": "../../../../../node_modules/@vuelidate/core/dist/index.mjs",
+      "file": "@vuelidate_core.js",
+      "fileHash": "aa13cef9",
+      "needsInterop": false
+    },
+    "@vuelidate/validators": {
+      "src": "../../../../../node_modules/@vuelidate/validators/dist/index.mjs",
+      "file": "@vuelidate_validators.js",
+      "fileHash": "d736e831",
+      "needsInterop": false
+    },
+    "dayjs/plugin/customParseFormat": {
+      "src": "../../../../../node_modules/dayjs/plugin/customParseFormat.js",
+      "file": "dayjs_plugin_customParseFormat.js",
+      "fileHash": "fd902a75",
+      "needsInterop": true
+    },
+    "dayjs/plugin/duration": {
+      "src": "../../../../../node_modules/dayjs/plugin/duration.js",
+      "file": "dayjs_plugin_duration.js",
+      "fileHash": "85d9965c",
+      "needsInterop": true
+    },
+    "dayjs/plugin/relativeTime": {
+      "src": "../../../../../node_modules/dayjs/plugin/relativeTime.js",
+      "file": "dayjs_plugin_relativeTime.js",
+      "fileHash": "93e3f982",
+      "needsInterop": true
+    },
+    "idb": {
+      "src": "../../../../../node_modules/idb/build/index.js",
+      "file": "idb.js",
+      "fileHash": "bd56c285",
+      "needsInterop": false
+    },
+    "numeral": {
+      "src": "../../../../../node_modules/numeral/numeral.js",
+      "file": "numeral.js",
+      "fileHash": "46412bd4",
+      "needsInterop": true
+    }
+  },
+  "chunks": {
+    "chunk-Q6LV6YV5": {
+      "file": "chunk-Q6LV6YV5.js"
+    },
+    "chunk-WMQCBSRE": {
+      "file": "chunk-WMQCBSRE.js"
+    },
+    "chunk-W5XYSPTI": {
+      "file": "chunk-W5XYSPTI.js"
+    },
+    "chunk-DZ5VRGCL": {
+      "file": "chunk-DZ5VRGCL.js"
+    }
+  }
+}

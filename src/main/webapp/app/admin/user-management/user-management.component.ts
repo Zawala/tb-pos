@@ -5,7 +5,6 @@ import { useAlertService } from '@/shared/alert/alert.service';
 import { useDateFormat } from '@/shared/composables';
 
 export default defineComponent({
-  compatConfig: { MODE: 3 },
   name: 'JhiUserManagementComponent',
   mounted(): void {
     this.loadAll();
@@ -28,6 +27,7 @@ export default defineComponent({
     const users: Ref<any[]> = ref([]);
     const totalItems = ref(0);
     const queryCount: Ref<number> = ref(null);
+    const deleteDialogOpen = ref(false);
 
     return {
       formatDate,
@@ -46,6 +46,7 @@ export default defineComponent({
       username,
       totalItems,
       queryCount,
+      deleteDialogOpen,
     };
   },
   methods: {
@@ -122,14 +123,10 @@ export default defineComponent({
     },
     prepareRemove(instance): void {
       this.removeId = instance.login;
-      if (<any>this.$refs.removeUser) {
-        (<any>this.$refs.removeUser).show();
-      }
+      this.deleteDialogOpen = true;
     },
     closeDialog(): void {
-      if (<any>this.$refs.removeUser) {
-        (<any>this.$refs.removeUser).hide();
-      }
+      this.deleteDialogOpen = false;
     },
   },
 });

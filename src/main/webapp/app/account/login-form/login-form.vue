@@ -1,51 +1,35 @@
 <template>
-  <div class="modal-body">
-    <div class="row justify-content-center">
-      <div class="col-md-8">
-        <b-alert show data-cy="loginError" variant="danger" v-if="authenticationError"
-          ><strong>Failed to sign in!</strong> Please check your credentials and try again.</b-alert
-        >
+  <div>
+    <div v-if="authenticationError" data-cy="loginError" class="tb-login-error">
+      <strong>Failed to sign in!</strong> Please check your credentials and try again.
+    </div>
+
+    <form class="tb-login-form" @submit.prevent="doLogin()">
+      <div>
+        <label for="username">Username</label>
+        <label class="tb-field">
+          <TbIcon name="user" :size="18" class-name="tb-field-ic" />
+          <input id="username" v-model="login" type="text" name="username" autofocus placeholder="Your username" data-cy="username" />
+        </label>
       </div>
-      <div class="col-md-8">
-        <b-form @submit.prevent="doLogin()">
-          <b-form-group label="Username" label-for="username">
-            <b-form-input
-              id="username"
-              type="text"
-              name="username"
-              autofocus
-              placeholder="Your username"
-              v-model="login"
-              data-cy="username"
-            >
-            </b-form-input>
-          </b-form-group>
-          <b-form-group label="Password" label-for="password">
-            <b-form-input id="password" type="password" name="password" placeholder="Your password" v-model="password" data-cy="password">
-            </b-form-input>
-          </b-form-group>
-          <b-form-checkbox id="rememberMe" name="rememberMe" v-model="rememberMe" checked>
-            <span>Remember me</span>
-          </b-form-checkbox>
-          <div>
-            <b-button data-cy="submit" type="submit" variant="primary">Sign in</b-button>
-          </div>
-        </b-form>
-        <p></p>
-        <div>
-          <b-alert show variant="warning">
-            <b-link :to="'/account/reset/request'" class="alert-link" data-cy="forgetYourPasswordSelector"
-              >Did you forget your password?</b-link
-            >
-          </b-alert>
-        </div>
-        <div>
-          <b-alert show variant="warning">
-            <span>You don't have an account yet?</span>
-            <b-link :to="'/register'" class="alert-link">Register a new account</b-link>
-          </b-alert>
-        </div>
+      <div>
+        <label for="password">Password</label>
+        <label class="tb-field">
+          <TbIcon name="settings" :size="18" class-name="tb-field-ic" />
+          <input id="password" v-model="password" type="password" name="password" placeholder="Your password" data-cy="password" />
+        </label>
       </div>
+      <label class="tb-remember">
+        <input id="rememberMe" v-model="rememberMe" type="checkbox" name="rememberMe" />
+        <span>Remember me</span>
+      </label>
+      <TbButton kind="primary" size="lg" full type="submit" data-cy="submit">Sign in</TbButton>
+    </form>
+
+    <div class="tb-login-foot">
+      <router-link to="/account/reset/request" class="tb-login-link" data-cy="forgetYourPasswordSelector">
+        Forgot your password?
+      </router-link>
     </div>
   </div>
 </template>

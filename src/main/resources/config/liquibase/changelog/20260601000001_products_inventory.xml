@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="20260601000001-1" author="pos">
+        <createTable tableName="products">
+            <column name="id" type="${uuidType}">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="sku" type="varchar(50)">
+                <constraints unique="true" nullable="false" uniqueConstraintName="ux_product_sku"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="category" type="varchar(100)"/>
+            <column name="cost_price_usd" type="numeric(19,4)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="sell_price_usd" type="numeric(19,4)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="reorder_level" type="int" defaultValueNumeric="5"/>
+            <column name="active" type="boolean" defaultValueBoolean="true">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="timestamp"/>
+        </createTable>
+
+        <createTable tableName="inventory_items">
+            <column name="id" type="${uuidType}">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="product_id" type="${uuidType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="quantity" type="int" defaultValueNumeric="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_updated" type="timestamp"/>
+        </createTable>
+
+        <addForeignKeyConstraint
+            baseTableName="inventory_items"
+            baseColumnNames="product_id"
+            constraintName="fk_inventory_product"
+            referencedTableName="products"
+            referencedColumnNames="id"/>
+
+        <createTable tableName="stock_movements">
+            <column name="id" type="${uuidType}">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="product_id" type="${uuidType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="movement_type" type="varchar(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="quantity" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="notes" type="${clobType}"/>
+            <column name="created_by" type="bigint"/>
+            <column name="created_at" type="timestamp"/>
+        </createTable>
+
+        <addForeignKeyConstraint
+            baseTableName="stock_movements"
+            baseColumnNames="product_id"
+            constraintName="fk_movement_product"
+            referencedTableName="products"
+            referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint
+            baseTableName="stock_movements"
+            baseColumnNames="created_by"
+            constraintName="fk_movement_user"
+            referencedTableName="jhi_user"
+            referencedColumnNames="id"/>
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,62 @@
+@import 'tailwindcss';
+@import 'frappe-ui/style.css';
+@import './frappe-theme.css';
+
+/* TbPos POS design system (ported from wireframes/). Loaded after the
+   frappe-ui theme so the POS look (tb-* classes + --bg/--surface/--primary
+   tokens) wins globally. Namespaces don't collide with frappe's --ink-gray-*. */
+@import './pos/tokens.css';
+@import './pos/components.css';
+@import './pos/layout.css';
+@import './pos/screens.css';
+@import './pos/login.css';
+
+/* Scan frappe-ui's own components so the utility classes they use
+   (Button, Dialog, Badge, …) are generated. node_modules is normally
+   ignored, so this explicit source is required. */
+@source "../../../../../node_modules/frappe-ui/src/**/*.{vue,js,ts}";
+
+/* Drive `dark:` utilities off our [data-theme="dark"] toggle (frappe-ui's
+   convention) instead of the OS prefers-color-scheme default. */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+@layer base {
+  html {
+    font-family: 'InterVar', ui-sans-serif, system-ui, sans-serif;
+  }
+  /* Let native UI (scrollbars, form controls) follow the theme. */
+  [data-theme='dark'] {
+    color-scheme: dark;
+  }
+  body {
+    transition:
+      background-color 0.2s ease,
+      color 0.2s ease;
+  }
+}
+
+@layer components {
+  /* Indigo → violet brand mark, vivid on both light and dark surfaces. */
+  .brand-gradient {
+    @apply bg-gradient-to-br from-indigo-500 to-violet-600;
+  }
+  /* Gradient brand text (e.g. the wordmark / key totals). */
+  .brand-text {
+    @apply bg-gradient-to-r from-indigo-600 via-violet-600 to-fuchsia-600 bg-clip-text text-transparent;
+    @apply dark:from-indigo-400 dark:via-violet-400 dark:to-fuchsia-400;
+  }
+}
+
+/* Spinner utility (keyframes defined in pos/tokens.css). */
+.tb-spin {
+  animation: tb-spin 900ms linear infinite;
+}
+
+/* frappe-ui Dialog scrim (.dialog-overlay) and reka-ui popper content
+   (dropdowns/selects/popovers) portal to <body> with no z-index and rely on
+   DOM order. The .tb-frame shell uses `container-type`, which makes it a
+   stacking context that paints over those layers — so lift them explicitly. */
+.dialog-overlay,
+[data-reka-popper-content-wrapper] {
+  z-index: 1000 !important;
+}

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="20260601000003-1" author="pos">
+        <createTable tableName="sales">
+            <column name="id" type="${uuidType}">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="customer_id" type="${uuidType}"/>
+            <column name="cashier_id" type="bigint"/>
+            <column name="currency" type="varchar(3)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="subtotal_usd" type="numeric(19,4)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="discount_usd" type="numeric(19,4)" defaultValueNumeric="0"/>
+            <column name="tax_usd" type="numeric(19,4)" defaultValueNumeric="0"/>
+            <column name="total_usd" type="numeric(19,4)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="total_display" type="numeric(19,4)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="exchange_rate" type="numeric(19,6)"/>
+            <column name="payment_method" type="varchar(30)"/>
+            <column name="loyalty_points_redeemed" type="int" defaultValueNumeric="0"/>
+            <column name="loyalty_points_earned" type="int" defaultValueNumeric="0"/>
+            <column name="status" type="varchar(20)" defaultValue="COMPLETED"/>
+            <column name="created_at" type="timestamp"/>
+        </createTable>
+
+        <addForeignKeyConstraint
+            baseTableName="sales"
+            baseColumnNames="cashier_id"
+            constraintName="fk_sale_cashier"
+            referencedTableName="jhi_user"
+            referencedColumnNames="id"/>
+
+        <createTable tableName="sale_line_items">
+            <column name="id" type="${uuidType}">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="sale_id" type="${uuidType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="product_id" type="${uuidType}"/>
+            <column name="product_name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="quantity" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="unit_price_usd" type="numeric(19,4)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="line_total_usd" type="numeric(19,4)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint
+            baseTableName="sale_line_items"
+            baseColumnNames="sale_id"
+            constraintName="fk_line_item_sale"
+            referencedTableName="sales"
+            referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint
+            baseTableName="sale_line_items"
+            baseColumnNames="product_id"
+            constraintName="fk_line_item_product"
+            referencedTableName="products"
+            referencedColumnNames="id"/>
+    </changeSet>
+</databaseChangeLog>

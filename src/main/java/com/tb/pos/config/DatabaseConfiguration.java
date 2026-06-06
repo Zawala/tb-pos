@@ -35,7 +35,7 @@ import tech.jhipster.config.JHipsterConstants;
 import tech.jhipster.config.h2.H2ConfigurationHelper;
 
 @Configuration
-@EnableR2dbcRepositories({ "com.tb.pos.repository" })
+@EnableR2dbcRepositories("com.tb.pos")
 @EnableTransactionManagement
 @EnableConfigurationProperties(H2ConsoleProperties.class)
 public class DatabaseConfiguration {

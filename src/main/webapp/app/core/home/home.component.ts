@@ -1,18 +1,19 @@
 import { type ComputedRef, defineComponent, inject } from 'vue';
 
-import { useLoginModal } from '@/account/login-modal';
-
 export default defineComponent({
-  compatConfig: { MODE: 3 },
   setup() {
-    const { showLogin } = useLoginModal();
     const authenticated = inject<ComputedRef<boolean>>('authenticated');
     const username = inject<ComputedRef<string>>('currentUsername');
+
+    const demoCredentials = [
+      { role: 'Administrator', login: 'admin', password: 'admin', badge: 'Admin', badgeTheme: 'red' },
+      { role: 'User', login: 'user', password: 'user', badge: 'User', badgeTheme: 'blue' },
+    ];
 
     return {
       authenticated,
       username,
-      showLogin,
+      demoCredentials,
     };
   },
 });

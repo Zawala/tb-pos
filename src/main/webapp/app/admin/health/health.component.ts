@@ -4,7 +4,6 @@ import HealthService from './health.service';
 import JhiHealthModal from './health-modal.vue';
 
 export default defineComponent({
-  compatConfig: { MODE: 3 },
   name: 'JhiHealth',
   components: {
     'health-modal': JhiHealthModal,
@@ -15,12 +14,14 @@ export default defineComponent({
     const healthData: Ref<any> = ref(null);
     const currentHealth: Ref<any> = ref(null);
     const updatingHealth = ref(false);
+    const healthModalOpen = ref(false);
 
     return {
       healthService,
       healthData,
       currentHealth,
       updatingHealth,
+      healthModalOpen,
     };
   },
   mounted(): void {
@@ -31,10 +32,7 @@ export default defineComponent({
       return this.healthService.getBaseName(name);
     },
     getBadgeClass(statusState: any): string {
-      if (statusState === 'UP') {
-        return 'badge-success';
-      }
-      return 'badge-danger';
+      return statusState === 'UP' ? 'green' : 'red';
     },
     refresh(): void {
       this.updatingHealth = true;
@@ -53,7 +51,7 @@ export default defineComponent({
     },
     showHealth(health: any): void {
       this.currentHealth = health;
-      (<any>this.$refs.healthModal).show();
+      this.healthModalOpen = true;
     },
     subSystemName(name: string): string {
       return this.healthService.getSubSystemName(name);

@@ -6,7 +6,6 @@ import MetricsService from './metrics.service';
 import { useDateFormat } from '@/shared/composables';
 
 export default defineComponent({
-  compatConfig: { MODE: 3 },
   name: 'JhiMetrics',
   components: {
     'metrics-modal': JhiMetricsModal,
@@ -19,6 +18,7 @@ export default defineComponent({
     const threadData: Ref<any> = ref(null);
     const threadStats: Ref<any> = ref({});
     const updatingMetrics = ref(true);
+    const metricsModalOpen = ref(false);
 
     return {
       metricsService,
@@ -26,6 +26,7 @@ export default defineComponent({
       threadData,
       threadStats,
       updatingMetrics,
+      metricsModalOpen,
       formatDate,
     };
   },
@@ -81,9 +82,7 @@ export default defineComponent({
         });
     },
     openModal(): void {
-      if ((<any>this.$refs.metricsModal).show) {
-        (<any>this.$refs.metricsModal).show();
-      }
+      this.metricsModalOpen = true;
     },
     filterNaN(input: any): any {
       if (isNaN(input)) {

@@ -1,55 +1,21 @@
-import type { BvToast } from 'bootstrap-vue';
-import { getCurrentInstance } from 'vue';
+import { toast } from 'frappe-ui';
 
-export const useAlertService = () => {
-  const bvToast = getCurrentInstance().root.proxy._bv__toast;
-  if (!bvToast) {
-    throw new Error('BootstrapVue toast component was not found');
-  }
-  return new AlertService({
-    bvToast,
-  });
-};
+export const useAlertService = () => new AlertService();
 
 export default class AlertService {
-  private bvToast: BvToast;
-
-  constructor({ bvToast }: { bvToast: BvToast }) {
-    this.bvToast = bvToast;
+  showInfo(toastMessage: string): void {
+    toast.info(toastMessage);
   }
 
-  showInfo(toastMessage: string, toastOptions?: any) {
-    this.bvToast.toast(toastMessage, {
-      toaster: 'b-toaster-top-center',
-      title: 'Info',
-      variant: 'info',
-      solid: true,
-      autoHideDelay: 5000,
-      ...toastOptions,
-    });
+  showSuccess(toastMessage: string): void {
+    toast.success(toastMessage);
   }
 
-  showSuccess(toastMessage: string) {
-    this.bvToast.toast(toastMessage, {
-      toaster: 'b-toaster-top-center',
-      title: 'Success',
-      variant: 'success',
-      solid: true,
-      autoHideDelay: 5000,
-    });
+  showError(toastMessage: string): void {
+    toast.error(toastMessage);
   }
 
-  showError(toastMessage: string) {
-    this.bvToast.toast(toastMessage, {
-      toaster: 'b-toaster-top-center',
-      title: 'Error',
-      variant: 'danger',
-      solid: true,
-      autoHideDelay: 5000,
-    });
-  }
-
-  showHttpError(httpErrorResponse: any) {
+  showHttpError(httpErrorResponse: any): void {
     let errorMessage: string | null = null;
     switch (httpErrorResponse.status) {
       case 0:

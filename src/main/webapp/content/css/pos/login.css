@@ -1,0 +1,356 @@
+/* ============================================================
+   TbPos — login screen
+   ============================================================ */
+.tb-login {
+  height: 100%;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background:
+    radial-gradient(130% 100% at 0% 0%, var(--primary-softer), transparent 55%),
+    radial-gradient(120% 100% at 100% 100%, var(--primary-softer), transparent 50%);
+}
+.tb-login-card {
+  display: flex;
+  width: 100%;
+  max-width: 880px;
+  min-height: 540px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-xl);
+  box-shadow: var(--shadow-xl);
+  overflow: hidden;
+}
+
+/* brand panel */
+.tb-login-brand {
+  flex: 1;
+  padding: 40px;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(150deg, var(--primary), var(--accent-2));
+  position: relative;
+  overflow: hidden;
+}
+.tb-login-brand::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.06) 0 2px, transparent 2px 16px);
+}
+.tb-login-brand > * {
+  position: relative;
+  z-index: 1;
+}
+.tb-login-logo {
+  width: 60px;
+  height: 60px;
+  border-radius: var(--r-lg);
+  background: rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(6px);
+  display: grid;
+  place-items: center;
+  font-size: 28px;
+  font-weight: 800;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+.tb-login-brand h1 {
+  font-size: 34px;
+  font-weight: 800;
+  letter-spacing: -1px;
+  margin: 28px 0 8px;
+}
+.tb-login-brand p {
+  font-size: 15px;
+  opacity: 0.9;
+  margin: 0;
+  line-height: 1.5;
+  max-width: 280px;
+}
+.tb-login-feats {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+}
+.tb-login-feat {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.tb-login-feat span {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.16);
+  display: grid;
+  place-items: center;
+  flex: none;
+}
+
+/* auth panel */
+.tb-login-auth {
+  width: 400px;
+  flex: none;
+  padding: 38px 34px;
+  display: flex;
+  flex-direction: column;
+}
+.tb-login-auth h2 {
+  font-size: 22px;
+  font-weight: 700;
+  margin: 0 0 4px;
+  letter-spacing: -0.4px;
+}
+.tb-login-auth .lead {
+  color: var(--text-muted);
+  font-size: 14px;
+  margin: 0 0 24px;
+}
+
+.tb-staff-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.tb-staff-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 20px 12px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--surface-2);
+  cursor: pointer;
+  transition: all var(--speed) var(--ease);
+  text-align: center;
+}
+.tb-staff-tile:hover {
+  transform: translateY(-3px);
+  border-color: var(--primary);
+  box-shadow: var(--shadow-md);
+}
+.tb-staff-ava {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  font-weight: 700;
+  font-size: 18px;
+  box-shadow: var(--shadow-sm);
+}
+.tb-staff-tile b {
+  font-size: 14px;
+  font-weight: 600;
+}
+.tb-staff-tile span {
+  font-size: 12px;
+  color: var(--text-subtle);
+}
+
+/* pin view */
+.tb-pin-view {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.tb-pin-back {
+  align-self: flex-start;
+}
+.tb-pin-ava {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  font-weight: 700;
+  font-size: 22px;
+  box-shadow: var(--shadow-md);
+  margin: 4px 0 10px;
+}
+.tb-pin-name {
+  font-size: 17px;
+  font-weight: 700;
+}
+.tb-pin-hint {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin: 2px 0 18px;
+}
+.tb-pin-dots {
+  display: flex;
+  gap: 14px;
+  margin-bottom: 22px;
+}
+.tb-pin-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--surface-sunken);
+  border: 2px solid var(--border-strong);
+  transition: all var(--speed) var(--ease);
+}
+.tb-pin-dot.is-filled {
+  background: var(--primary);
+  border-color: var(--primary);
+  transform: scale(1.1);
+}
+.tb-pin-dots.is-shake {
+  animation: tb-shake 360ms;
+}
+@keyframes tb-shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(-8px);
+  }
+  40% {
+    transform: translateX(8px);
+  }
+  60% {
+    transform: translateX(-5px);
+  }
+  80% {
+    transform: translateX(5px);
+  }
+}
+.tb-pinpad {
+  display: grid;
+  grid-template-columns: repeat(3, 72px);
+  gap: 12px;
+  justify-content: center;
+}
+.tb-pinkey {
+  height: 60px;
+  border-radius: var(--r);
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  font-family: inherit;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text);
+  cursor: pointer;
+  transition: all var(--speed);
+  display: grid;
+  place-items: center;
+}
+.tb-pinkey:hover {
+  background: var(--surface-3);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+.tb-pinkey:active {
+  transform: scale(0.95);
+}
+.tb-pinkey.ghost {
+  background: transparent;
+  border-color: transparent;
+  color: var(--text-muted);
+}
+.tb-pinkey.ghost:hover {
+  background: var(--surface-3);
+  box-shadow: none;
+}
+
+/* password form */
+.tb-login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.tb-login-form label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+  display: block;
+  margin-bottom: 6px;
+}
+/* keep the field row laid out despite the generic label rule above */
+.tb-login-form .tb-field {
+  display: flex;
+  margin-bottom: 0;
+  color: var(--text);
+}
+.tb-login-error {
+  padding: 11px 14px;
+  border-radius: var(--r);
+  margin-bottom: 14px;
+  background: var(--danger-soft);
+  color: var(--danger);
+  font-size: 13.5px;
+}
+.tb-remember {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 0;
+  cursor: pointer;
+}
+.tb-remember input {
+  width: auto;
+  accent-color: var(--primary);
+}
+
+.tb-login-foot {
+  margin-top: auto;
+  padding-top: 22px;
+  text-align: center;
+}
+.tb-login-link {
+  background: none;
+  border: none;
+  color: var(--primary);
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 13.5px;
+  cursor: pointer;
+  padding: 6px;
+}
+[data-theme='dark'] .tb-login-link {
+  color: var(--accent-2);
+}
+
+/* success */
+.tb-login-ok {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  height: 100%;
+  animation: tb-fade var(--speed);
+}
+.tb-login-ok-ic {
+  width: 92px;
+  height: 92px;
+  border-radius: 50%;
+  background: var(--success-soft);
+  color: var(--success);
+  display: grid;
+  place-items: center;
+  animation: tb-pop 360ms var(--ease);
+}
+
+@container frame (max-width: 720px) {
+  .tb-login-brand {
+    display: none;
+  }
+  .tb-login-auth {
+    width: 100%;
+  }
+  .tb-login-card {
+    max-width: 440px;
+    min-height: 0;
+  }
+}

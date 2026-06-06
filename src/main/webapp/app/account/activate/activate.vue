@@ -1,16 +1,12 @@
 <template>
-  <div>
-    <div class="row justify-content-center">
-      <div class="col-md-8">
-        <h1>Activation</h1>
-        <div class="alert alert-success" v-if="success">
-          <span><strong>Your user account has been activated.</strong> Please </span>
-          <a class="alert-link" @click="showLogin()">sign in</a>.
-        </div>
-        <div class="alert alert-danger" v-if="error">
-          <strong>Your user could not be activated.</strong> Please use the registration form to sign up.
-        </div>
-      </div>
+  <div class="max-w-xl mx-auto py-8">
+    <h1 class="text-2xl font-semibold mb-4">Activation</h1>
+    <div v-if="success" class="p-4 rounded-lg bg-surface-green-2 text-ink-green-3">
+      <strong>Your user account has been activated.</strong> Please
+      <a class="font-semibold underline cursor-pointer" @click="showLogin()">sign in</a>.
+    </div>
+    <div v-if="error" class="p-4 rounded-lg bg-surface-red-2 text-ink-red-4">
+      <strong>Your user could not be activated.</strong> Please use the registration form to sign up.
     </div>
   </div>
 </template>

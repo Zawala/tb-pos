@@ -1,0 +1,26 @@
+diff --git a/node_modules/frappe-ui/src/components/TextEditor/style.css b/node_modules/frappe-ui/src/components/TextEditor/style.css
+index 6cf46cd..9bd6791 100644
+--- a/node_modules/frappe-ui/src/components/TextEditor/style.css
++++ b/node_modules/frappe-ui/src/components/TextEditor/style.css
+@@ -82,7 +82,7 @@ img.ProseMirror-selectednode {
+     width: 14px;
+     height: 14px;
+     border-radius: 4px;
+-    color: theme('colors.gray.900');
++    color: #111827;
+   }
+ }
+ 
+diff --git a/node_modules/frappe-ui/src/index.ts b/node_modules/frappe-ui/src/index.ts
+index f4eb500..7eb9c38 100644
+--- a/node_modules/frappe-ui/src/index.ts
++++ b/node_modules/frappe-ui/src/index.ts
+@@ -57,7 +57,7 @@ export { default as ListGroupRows } from './components/ListView/ListGroupRows.vu
+ export { default as ListSelectBanner } from './components/ListView/ListSelectBanner.vue'
+ export { default as ListFooter } from './components/ListView/ListFooter.vue'
+ export { default as Toast } from './components/Toast/Toast.vue'
+-export { toast } from './components/Toast/index'
++export { toast, Toasts } from './components/Toast/index'
+ export * from './components/Tooltip'
+ export { default as CommandPalette } from './components/CommandPalette/CommandPalette.vue'
+ export { default as CommandPaletteItem } from './components/CommandPalette/CommandPaletteItem.vue'

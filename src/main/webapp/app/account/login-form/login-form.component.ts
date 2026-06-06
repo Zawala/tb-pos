@@ -3,9 +3,11 @@ import { type Ref, defineComponent, inject, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import type AccountService from '../account.service';
 import { useLoginModal } from '@/account/login-modal';
+import TbIcon from '@/components/ui/TbIcon.vue';
+import TbButton from '@/components/ui/TbButton.vue';
 
 export default defineComponent({
-  compatConfig: { MODE: 3 },
+  components: { TbIcon, TbButton },
   setup() {
     const authenticationError: Ref<boolean> = ref(false);
     const login: Ref<string> = ref(null);
@@ -41,6 +43,8 @@ export default defineComponent({
         await accountService.retrieveAccount();
         if (route.path === '/forbidden') {
           previousState();
+        } else if (route.path === '/login') {
+          router.push('/');
         }
       } catch {
         authenticationError.value = true;

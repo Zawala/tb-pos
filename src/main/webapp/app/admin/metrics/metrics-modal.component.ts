@@ -3,7 +3,6 @@ import { type PropType, type Ref, computed, defineComponent, ref } from 'vue';
 import { filterBy } from '@/shared/computables';
 
 export default defineComponent({
-  compatConfig: { MODE: 3 },
   name: 'JhiMetricsModal',
   props: {
     threadDump: {
@@ -47,15 +46,11 @@ export default defineComponent({
   },
   methods: {
     getBadgeClass(threadState: string): string {
-      if (threadState === 'RUNNABLE') {
-        return 'badge-success';
-      } else if (threadState === 'WAITING') {
-        return 'badge-info';
-      } else if (threadState === 'TIMED_WAITING') {
-        return 'badge-warning';
-      } else if (threadState === 'BLOCKED') {
-        return 'badge-danger';
-      }
+      if (threadState === 'RUNNABLE') return 'green';
+      if (threadState === 'WAITING') return 'blue';
+      if (threadState === 'TIMED_WAITING') return 'orange';
+      if (threadState === 'BLOCKED') return 'red';
+      return 'gray';
     },
   },
 });

@@ -1,53 +1,57 @@
 <template>
-  <div class="row justify-content-center">
-    <div class="col-8">
-      <div v-if="user">
-        <h2 class="jh-entity-heading">
-          <span>User</span> [<strong>{{ user.login }}</strong
-          >]
-        </h2>
-        <dl class="row jh-entity-details">
-          <dt><span>Login</span></dt>
-          <dd>
-            <span>{{ user.login }}</span>
-            <b-badge variant="success" v-if="user.activated">Activated</b-badge>
-            <b-badge variant="danger" v-if="!user.activated">Deactivated</b-badge>
+  <div class="max-w-2xl mx-auto py-8">
+    <div v-if="user">
+      <h2 class="text-xl font-semibold mb-4">
+        User [<strong>{{ user.login }}</strong
+        >]
+      </h2>
+      <dl class="divide-y divide-outline-gray-1">
+        <div class="grid grid-cols-3 py-2">
+          <dt class="text-sm font-medium text-ink-gray-5">Login</dt>
+          <dd class="col-span-2 text-sm flex items-center gap-2">
+            {{ user.login }}
+            <Badge v-if="user.activated" theme="green" variant="subtle" label="Activated" />
+            <Badge v-if="!user.activated" theme="red" variant="subtle" label="Deactivated" />
           </dd>
-          <dt><span>First name</span></dt>
-          <dd>{{ user.firstName }}</dd>
-          <dt><span>Last name</span></dt>
-          <dd>{{ user.lastName }}</dd>
-          <dt><span>Email</span></dt>
-          <dd>{{ user.email }}</dd>
-          <dt><span>Created by</span></dt>
-          <dd>{{ user.createdBy }}</dd>
-          <dt><span>Created date</span></dt>
-          <dd>
-            <span v-if="user.createdDate">
-              {{ formatDate(user.createdDate) }}
-            </span>
+        </div>
+        <div class="grid grid-cols-3 py-2">
+          <dt class="text-sm font-medium text-ink-gray-5">First name</dt>
+          <dd class="col-span-2 text-sm">{{ user.firstName }}</dd>
+        </div>
+        <div class="grid grid-cols-3 py-2">
+          <dt class="text-sm font-medium text-ink-gray-5">Last name</dt>
+          <dd class="col-span-2 text-sm">{{ user.lastName }}</dd>
+        </div>
+        <div class="grid grid-cols-3 py-2">
+          <dt class="text-sm font-medium text-ink-gray-5">Email</dt>
+          <dd class="col-span-2 text-sm">{{ user.email }}</dd>
+        </div>
+        <div class="grid grid-cols-3 py-2">
+          <dt class="text-sm font-medium text-ink-gray-5">Created by</dt>
+          <dd class="col-span-2 text-sm">{{ user.createdBy }}</dd>
+        </div>
+        <div class="grid grid-cols-3 py-2">
+          <dt class="text-sm font-medium text-ink-gray-5">Created date</dt>
+          <dd class="col-span-2 text-sm">{{ user.createdDate ? formatDate(user.createdDate) : '' }}</dd>
+        </div>
+        <div class="grid grid-cols-3 py-2">
+          <dt class="text-sm font-medium text-ink-gray-5">Modified by</dt>
+          <dd class="col-span-2 text-sm">{{ user.lastModifiedBy }}</dd>
+        </div>
+        <div class="grid grid-cols-3 py-2">
+          <dt class="text-sm font-medium text-ink-gray-5">Modified date</dt>
+          <dd class="col-span-2 text-sm">{{ user.lastModifiedDate ? formatDate(user.lastModifiedDate) : '' }}</dd>
+        </div>
+        <div class="grid grid-cols-3 py-2">
+          <dt class="text-sm font-medium text-ink-gray-5">Profiles</dt>
+          <dd class="col-span-2 text-sm flex flex-wrap gap-1">
+            <Badge v-for="authority of user.authorities" :key="authority" variant="subtle" :label="authority" />
           </dd>
-          <dt><span>Modified by</span></dt>
-          <dd>{{ user.lastModifiedBy }}</dd>
-          <dt><span>Modified date</span></dt>
-          <dd>
-            <span v-if="user.lastModifiedDate">
-              {{ formatDate(user.lastModifiedDate) }}
-            </span>
-          </dd>
-          <dt><span>Profiles</span></dt>
-          <dd>
-            <ul class="list-unstyled">
-              <li v-for="authority of user.authorities" :key="authority">
-                <b-badge variant="info">{{ authority }}</b-badge>
-              </li>
-            </ul>
-          </dd>
-        </dl>
+        </div>
+      </dl>
+      <div class="mt-4">
         <router-link custom v-slot="{ navigate }" :to="{ name: 'JhiUser' }">
-          <button @click="navigate" class="btn btn-info">
-            <font-awesome-icon icon="arrow-left"></font-awesome-icon>&nbsp;<span>Back</span>
-          </button>
+          <Button @click="navigate" variant="subtle" theme="gray" icon-left="arrow-left" label="Back" />
         </router-link>
       </div>
     </div>

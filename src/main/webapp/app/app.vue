@@ -1,22 +1,41 @@
 <template>
   <div id="app">
     <ribbon></ribbon>
-    <div id="app-header">
-      <jhi-navbar></jhi-navbar>
-    </div>
-    <div class="container-fluid">
-      <div class="card jh-card">
-        <router-view></router-view>
-      </div>
-      <b-modal id="login-page" v-model="loginModalOpen" hide-footer lazy>
-        <template #modal-title>
-          <span data-cy="loginTitle" id="login-title">Sign in</span>
-        </template>
-        <login-form></login-form>
-      </b-modal>
 
-      <jhi-footer></jhi-footer>
+    <!-- Authenticated: full sidebar shell (mirrors wireframes/app.jsx) -->
+    <div v-if="authenticated" class="tb-frame" data-nav="sidebar">
+      <tb-sidebar></tb-sidebar>
+      <div class="tb-content">
+        <div class="tb-topbar">
+          <span class="tb-topbar-title">{{ pageTitle }}</span>
+          <div class="tb-topbar-spacer"></div>
+          <div class="tb-store-pill">
+            <span class="ava">{{ userInitial }}</span>
+            <span class="tb-store-meta tb-hide-sm"> <b>TbPos</b><span>Downtown · Register 1</span> </span>
+            <TbIcon name="chevdown" :size="16" class="tb-hide-sm" />
+          </div>
+          <TbCurrencyToggle class="tb-hide-sm" />
+          <TbIconButton name="bell" kind="outline" class="tb-hide-sm" />
+          <TbIconButton :name="theme === 'dark' ? 'sun' : 'moon'" kind="outline" title="Toggle theme" @click="toggleTheme" />
+        </div>
+        <div class="tb-scroll">
+          <router-view></router-view>
+        </div>
+      </div>
     </div>
+
+    <!-- Unauthenticated: full-bleed (login owns the screen) -->
+    <div v-else class="tb-frame" data-nav="none">
+      <router-view></router-view>
+    </div>
+
+    <Dialog v-model="loginModalOpen" :options="{ title: 'Sign in', description: 'Enter your credentials to sign in' }">
+      <template #body-content>
+        <login-form></login-form>
+      </template>
+    </Dialog>
+
+    <Toasts />
   </div>
 </template>
 

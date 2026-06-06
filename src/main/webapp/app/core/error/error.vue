@@ -1,19 +1,12 @@
 <template>
-  <div>
-    <div class="row">
-      <div class="col-md-3">
-        <span class="hipster img-fluid rounded"></span>
-      </div>
-      <div class="col-md-9">
-        <h1>Error page!</h1>
+  <div class="max-w-2xl mx-auto py-8">
+    <h1 class="text-2xl font-semibold mb-4 text-ink-red-4">Error page!</h1>
 
-        <div v-if="errorMessage">
-          <div class="alert alert-danger">{{ errorMessage }}</div>
-        </div>
-        <div v-if="error403" class="alert alert-danger">You are not authorized to access this page.</div>
-        <div v-if="error404" class="alert alert-warning">The page does not exist.</div>
-      </div>
+    <div v-if="errorMessage" class="p-4 rounded-lg bg-surface-red-2 text-ink-red-4 mb-3">
+      {{ errorMessage }}
     </div>
+    <div v-if="error403" class="p-4 rounded-lg bg-surface-red-2 text-ink-red-4 mb-3">You are not authorized to access this page.</div>
+    <div v-if="error404" class="p-4 rounded-lg bg-surface-amber-1 text-ink-amber-3 mb-3">The page does not exist.</div>
   </div>
 </template>
 
