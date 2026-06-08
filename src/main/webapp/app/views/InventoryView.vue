@@ -62,7 +62,7 @@
       </div>
     </div>
 
-    <StockAdjustModal v-model="showAdjust" :product="selectedProduct" />
+    <StockInDrawer :open="showAdjust" :initial-product="selectedProduct" @close="showAdjust = false" @saved="onStockSaved" />
   </div>
 </template>
 
@@ -71,7 +71,8 @@ import { ref, computed, onMounted } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useInventoryStore, type Product } from '@/stores/inventory';
 import { useCurrency } from '@/composables/useCurrency';
-import StockAdjustModal from '@/components/inventory/StockAdjustModal.vue';
+import { tbToast } from '@/composables/useOverlay';
+import StockInDrawer from '@/components/inventory/StockInDrawer.vue';
 import TbPageHead from '@/components/ui/TbPageHead.vue';
 import TbButton from '@/components/ui/TbButton.vue';
 import TbStatCard from '@/components/ui/TbStatCard.vue';
@@ -114,8 +115,12 @@ function openAdjust(p: Product) {
   showAdjust.value = true;
 }
 function openStockIn() {
-  selectedProduct.value = products.value[0] ?? null;
+  selectedProduct.value = null;
   showAdjust.value = true;
+}
+
+function onStockSaved(name: string, qty: number) {
+  tbToast.success('Stock received', `${qty} × ${name} added to inventory`, { icon: 'package' });
 }
 
 onMounted(() => inventory.fetchProducts());

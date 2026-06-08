@@ -90,6 +90,7 @@ function Products() {
   const TB = window.TB;
   const [q, setQ] = useState("");
   const [cat, setCat] = useState("all");
+  const [addOpen, setAddOpen] = useState(false);
   const list = TB.products.filter(p =>
     (cat === "all" || p.cat === cat) &&
     (p.name.toLowerCase().includes(q.toLowerCase()) || p.sku.includes(q)));
@@ -97,7 +98,7 @@ function Products() {
     <div className="tb-page">
       <PageHead title="Products" sub={`${TB.products.length} items across ${TB.CATS.length - 1} categories`}>
         <Btn kind="default" icon="filter" className="tb-hide-sm">Filters</Btn>
-        <Btn kind="primary" icon="plus">Add Product</Btn>
+        <Btn kind="primary" icon="plus" onClick={() => setAddOpen(true)}>Add Product</Btn>
       </PageHead>
       <div className="tb-tablewrap">
         <div className="tb-tabletools">
@@ -110,7 +111,7 @@ function Products() {
           <table className="tb-table">
             <thead><tr>
               <th>Product</th><th className="tb-hide-sm">SKU</th><th className="tb-hide-sm">Category</th>
-              <th className="r">Price</th><th className="r">Stock</th><th className="r">Status</th>
+              <th className="r">Price</th><th className="r">Stock</th><th className="r">Status</th><th></th>
             </tr></thead>
             <tbody>
               {list.map(p => (
@@ -121,19 +122,78 @@ function Products() {
                   <td className="r"><b className="tnum"><Money v={p.price} /></b></td>
                   <td className="r tnum" style={{ fontWeight: 600 }}>{p.stock}</td>
                   <td className="r">{p.stock === 0 ? <Chip tone="danger">Out</Chip> : p.stock <= 9 ? <Chip tone="warning">Low</Chip> : <Chip tone="success">In stock</Chip>}</td>
+                  <td className="r" style={{ width: 48 }} onClick={e => e.stopPropagation()}>
+                    <Menu align="right" trigger={<IconBtn name="dots" kind="ghost" />} items={[
+                      { label: "Edit product", icon: "edit", onClick: () => tbToast.info("Edit " + p.name) },
+                      { label: "Duplicate", icon: "copy", onClick: () => tbToast.success("Duplicated", p.name) },
+                      { label: "Restock", icon: "package", onClick: () => tbToast.info("Restock " + p.name) },
+                      { divider: true },
+                      { label: "Delete", icon: "trash", danger: true, onClick: async () => {
+                        const ok = await tbConfirm({ intent: "danger", icon: "trash", title: "Delete product?", message: `“${p.name}” will be removed from your catalog.`, confirmText: "Delete", confirmIcon: "trash" });
+                        if (ok) tbToast.success("Product deleted", p.name);
+                      } },
+                    ]} />
+                  </td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
       </div>
+      <ProductModal open={addOpen} onClose={() => setAddOpen(false)}
+        onSave={(name) => { setAddOpen(false); tbToast.success("Product added", (name || "New product") + " is now in your catalog"); }} />
     </div>
+  );
+}
+
+function ProductModal({ open, onClose, onSave }) {
+  const TB = window.TB;
+  const [name, setName] = useState("");
+  const [price, setPrice] = useState("");
+  const [cat, setCat] = useState("drinks");
+  useEffect(() => { if (open) { setName(""); setPrice(""); setCat("drinks"); } }, [open]);
+  return (
+    <Modal open={open} onClose={onClose} size="md" icon="tag" title="Add product" sub="Create a new catalog item"
+      footer={<>
+        <Btn kind="default" onClick={onClose}>Cancel</Btn>
+        <Btn kind="primary" icon="check" disabled={!name.trim() || !price} onClick={() => onSave(name.trim())}>Save product</Btn>
+      </>}>
+      <div className="tb-form">
+        <div className="tb-form-row">
+          <label className="tb-label">Product name</label>
+          <input className="tb-input" value={name} onChange={e => setName(e.target.value)} placeholder="e.g. Cold Brew Coffee 330ml" autoFocus />
+        </div>
+        <div className="tb-form-row two">
+          <div className="tb-form-row">
+            <label className="tb-label">Price</label>
+            <input className="tb-input tnum" value={price} onChange={e => setPrice(e.target.value.replace(/[^0-9.]/g, ""))} placeholder="0.00" inputMode="decimal" />
+          </div>
+          <div className="tb-form-row">
+            <label className="tb-label">Category</label>
+            <select className="tb-input" value={cat} onChange={e => setCat(e.target.value)}>
+              {TB.CATS.filter(c => c.id !== "all").map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+            </select>
+          </div>
+        </div>
+        <div className="tb-form-row two">
+          <div className="tb-form-row">
+            <label className="tb-label">SKU / Barcode</label>
+            <input className="tb-input tb-mono" placeholder="Auto-generate" />
+          </div>
+          <div className="tb-form-row">
+            <label className="tb-label">Opening stock</label>
+            <input className="tb-input tnum" placeholder="0" inputMode="numeric" />
+          </div>
+        </div>
+      </div>
+    </Modal>
   );
 }
 
 function Inventory() {
   const TB = window.TB;
   const [q, setQ] = useState("");
+  const [stockOpen, setStockOpen] = useState(false);
   const list = TB.products.filter(p => p.name.toLowerCase().includes(q.toLowerCase()));
   const lowCount = TB.products.filter(p => p.stock > 0 && p.stock <= 9).length;
   const outCount = TB.products.filter(p => p.stock === 0).length;
@@ -143,7 +203,7 @@ function Inventory() {
     <div className="tb-page">
       <PageHead title="Inventory" sub="Stock levels & reorder management">
         <Btn kind="default" icon="print" className="tb-hide-sm">Export</Btn>
-        <Btn kind="primary" icon="plus">Stock In</Btn>
+        <Btn kind="primary" icon="plus" onClick={() => setStockOpen(true)}>Stock In</Btn>
       </PageHead>
       <div className="tb-grid4" style={{ marginBottom: 22 }}>
         <StatCard label="Total Units" value={totalUnits.toLocaleString()} icon="package" accent="var(--primary)" />
@@ -178,7 +238,56 @@ function Inventory() {
           </table>
         </div>
       </div>
+      <StockInDrawer open={stockOpen} onClose={() => setStockOpen(false)}
+        onSave={(name, qty) => { setStockOpen(false); tbToast.success("Stock received", qty + " × " + name + " added to inventory", { icon: "package" }); }} />
     </div>
+  );
+}
+
+function StockInDrawer({ open, onClose, onSave }) {
+  const TB = window.TB;
+  const [pid, setPid] = useState(TB.products[0].id);
+  const [qty, setQty] = useState("");
+  const [supplier, setSupplier] = useState("");
+  useEffect(() => { if (open) { setPid(TB.products[0].id); setQty(""); setSupplier(""); } }, [open]);
+  const prod = TB.products.find(p => p.id === pid);
+  return (
+    <Drawer open={open} onClose={onClose} side="right" title="Receive stock" sub="Add incoming units to inventory"
+      footer={<>
+        <Btn kind="default" onClick={onClose}>Cancel</Btn>
+        <Btn kind="primary" icon="check" disabled={!qty} onClick={() => onSave(prod.name, qty)}>Receive {qty || ""} units</Btn>
+      </>}>
+      <div className="tb-form">
+        <div className="tb-form-row">
+          <label className="tb-label">Product</label>
+          <select className="tb-input" value={pid} onChange={e => setPid(e.target.value)}>
+            {TB.products.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
+          </select>
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: 12, padding: "12px 14px", background: "var(--surface-2)", border: "1px solid var(--border)", borderRadius: "var(--r)" }}>
+          <Tile name={prod.name} cat={prod.cat} size="sm" />
+          <div style={{ flex: 1 }}><b style={{ fontSize: 14 }}>{prod.name}</b><div style={{ fontSize: 12, color: "var(--text-subtle)" }}>Current: {prod.stock} units · #{prod.sku}</div></div>
+        </div>
+        <div className="tb-form-row two">
+          <div className="tb-form-row">
+            <label className="tb-label">Quantity received</label>
+            <input className="tb-input tnum" value={qty} onChange={e => setQty(e.target.value.replace(/[^0-9]/g, ""))} placeholder="0" inputMode="numeric" autoFocus />
+          </div>
+          <div className="tb-form-row">
+            <label className="tb-label">Unit cost</label>
+            <input className="tb-input tnum" placeholder="0.00" inputMode="decimal" />
+          </div>
+        </div>
+        <div className="tb-form-row">
+          <label className="tb-label">Supplier <span style={{ fontWeight: 400, color: "var(--text-subtle)" }}>(optional)</span></label>
+          <input className="tb-input" value={supplier} onChange={e => setSupplier(e.target.value)} placeholder="e.g. Northwind Foods" />
+        </div>
+        <div className="tb-form-row">
+          <label className="tb-label">Note</label>
+          <textarea className="tb-input" placeholder="Delivery reference, batch, expiry…" />
+        </div>
+      </div>
+    </Drawer>
   );
 }
 
@@ -232,8 +341,17 @@ function Orders() {
             <div className="tb-totrow grand"><span>Total</span><Money v={sel.total} /></div>
           </div>
           <div style={{ display: "flex", gap: 10, marginTop: 16 }}>
-            <Btn kind="default" icon="print" full>Reprint</Btn>
-            <Btn kind="danger" icon="refresh" full>Refund</Btn>
+            <Btn kind="default" icon="print" full onClick={() => tbToast.info("Reprinting receipt", sel.id)}>Reprint</Btn>
+            <Btn kind="danger" icon="refresh" full disabled={sel.status === "Refunded"} onClick={async () => {
+              const ok = await tbConfirm({ intent: "danger", icon: "refresh", title: "Refund " + sel.id + "?", message: `${window.TB.money(sel.total)} will be returned to the customer via ${sel.pay}. This action is logged.`, confirmText: "Refund " + window.TB.money(sel.total), confirmIcon: "refresh" });
+              if (ok) tbToast.success("Refund issued", window.TB.money(sel.total) + " returned · " + sel.id);
+            }}>Refund</Btn>
+            <Menu align="right" up trigger={<IconBtn name="dots" kind="outline" />} items={[
+              { label: "Email receipt", icon: "receipt", onClick: () => tbToast.info("Receipt emailed", sel.customer) },
+              { label: "Duplicate as new sale", icon: "copy", onClick: () => tbToast.success("Loaded to cart", sel.id) },
+              { divider: true },
+              { label: "Report an issue", icon: "warn", danger: true, onClick: () => tbToast.warning("Issue reported", sel.id) },
+            ]} />
           </div>
         </div>
       </div>

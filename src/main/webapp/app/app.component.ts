@@ -1,7 +1,6 @@
 import { computed, defineComponent, provide } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useRoute } from 'vue-router';
-import { Toasts } from 'frappe-ui';
 
 import { useLoginModal } from '@/account/login-modal';
 import LoginForm from '@/account/login-form/login-form.vue';
@@ -10,6 +9,7 @@ import TbSidebar from '@/core/tb-shell/TbSidebar.vue';
 import TbIcon from '@/components/ui/TbIcon.vue';
 import TbIconButton from '@/components/ui/TbIconButton.vue';
 import TbCurrencyToggle from '@/components/ui/TbCurrencyToggle.vue';
+import TbOverlayHost from '@/components/ui/TbOverlayHost.vue';
 import { useStore } from '@/store';
 import { useTheme } from '@/composables/useTheme';
 import { useAlertService } from '@/shared/alert/alert.service';
@@ -35,7 +35,7 @@ export default defineComponent({
     TbIcon,
     TbIconButton,
     TbCurrencyToggle,
-    Toasts,
+    TbOverlayHost,
   },
   setup() {
     provide('alertService', useAlertService());

@@ -35,7 +35,7 @@
       </template>
     </Dialog>
 
-    <Toasts />
+    <TbOverlayHost />
   </div>
 </template>
 

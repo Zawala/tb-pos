@@ -8,6 +8,7 @@ function Settings({ prefs, setPref }) {
     ["payments", "card", "Payments"],
     ["receipt", "receipt", "Receipt"],
     ["staff", "user", "Staff"],
+    ["components", "grid", "Components"],
   ];
   const blues = [["#3b82f6", "Blue"], ["#2563eb", "Royal"], ["#0ea5e9", "Sky"], ["#6366f1", "Indigo"]];
   const purples = [["#b06bff", "Violet"], ["#ff5ec9", "Magenta"], ["#a855f7", "Purple"], ["#22d3ee", "Cyan"]];
@@ -101,6 +102,8 @@ function Settings({ prefs, setPref }) {
               <div style={{ paddingTop: 16 }}><Btn kind="soft" icon="plus">Add staff member</Btn></div>
             </div>
           )}
+
+          {tab === "components" && <ComponentsKit />}
         </div>
       </div>
     </div>
@@ -116,6 +119,101 @@ function SetToggle({ icon, label, defaultOn }) {
         <b>{label}</b>
       </div>
       <Toggle checked={on} onChange={setOn} />
+    </div>
+  );
+}
+
+function ComponentsKit() {
+  const [modal, setModal] = useState(false);
+  const [drawer, setDrawer] = useState(false);
+  return (
+    <div className="tb-set-section">
+      <div style={{ marginBottom: 18 }}>
+        <h3 style={{ margin: "0 0 4px", fontSize: 16, fontWeight: 700 }}>Overlay kit</h3>
+        <p style={{ margin: 0, color: "var(--text-muted)", fontSize: 13.5, lineHeight: 1.5 }}>
+          Reusable popups wired into TbPos. Imperative <code>tbToast()</code> / <code>tbConfirm()</code>, plus declarative <code>&lt;Modal&gt;</code>, <code>&lt;Drawer&gt;</code>, <code>&lt;Menu&gt;</code> &amp; <code>&lt;Popover&gt;</code> — all themed, responsive, and ready to drop into the Vue build.
+        </p>
+      </div>
+
+      <div className="tb-kit-grid">
+        <div className="tb-kit-card">
+          <b>Toasts</b>
+          <span className="desc">Auto-dismissing status messages, 4 intents, optional action.</span>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+            <Btn kind="soft" size="sm" onClick={() => tbToast.success("Saved", "Changes stored")}>Success</Btn>
+            <Btn kind="soft" size="sm" onClick={() => tbToast.error("Failed", "Card declined")}>Error</Btn>
+            <Btn kind="soft" size="sm" onClick={() => tbToast.warning("Low stock", "Reorder soon")}>Warning</Btn>
+            <Btn kind="soft" size="sm" onClick={() => tbToast.info("Heads up", "New update ready")}>Info</Btn>
+            <Btn kind="soft" size="sm" onClick={() => tbToast({ intent: "success", icon: "receipt", title: "Receipt ready", msg: "Send to customer?", action: { label: "Email", onClick: () => tbToast.info("Emailed") } })}>With action</Btn>
+          </div>
+        </div>
+
+        <div className="tb-kit-card">
+          <b>Confirm dialog</b>
+          <span className="desc">Promise-based. <code>await tbConfirm()</code> → true / false.</span>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+            <Btn kind="soft" size="sm" onClick={async () => { const ok = await tbConfirm({ title: "Apply changes?", message: "This updates the register settings." }); tbToast.info(ok ? "Confirmed" : "Cancelled"); }}>Info</Btn>
+            <Btn kind="soft" size="sm" onClick={async () => { const ok = await tbConfirm({ intent: "danger", icon: "trash", title: "Delete item?", message: "This can't be undone.", confirmText: "Delete", confirmIcon: "trash" }); if (ok) tbToast.success("Deleted"); }}>Danger</Btn>
+          </div>
+        </div>
+
+        <div className="tb-kit-card">
+          <b>Modal</b>
+          <span className="desc">Centered dialog with header, body &amp; footer. Esc / backdrop to close.</span>
+          <Btn kind="soft" size="sm" icon="grid" onClick={() => setModal(true)}>Open modal</Btn>
+        </div>
+
+        <div className="tb-kit-card">
+          <b>Drawer</b>
+          <span className="desc">Side sheet for forms &amp; detail panels. Slides from either edge.</span>
+          <Btn kind="soft" size="sm" icon="box" onClick={() => setDrawer(true)}>Open drawer</Btn>
+        </div>
+
+        <div className="tb-kit-card">
+          <b>Dropdown menu</b>
+          <span className="desc">Anchored actions with icons, dividers &amp; danger items.</span>
+          <Menu trigger={<Btn kind="soft" size="sm" iconRight="chevdown">Actions</Btn>} items={[
+            { header: true, label: "Manage" },
+            { label: "Edit", icon: "edit", onClick: () => tbToast.info("Edit") },
+            { label: "Duplicate", icon: "copy", onClick: () => tbToast.info("Duplicated") },
+            { divider: true },
+            { label: "Delete", icon: "trash", danger: true, onClick: () => tbToast.warning("Deleted") },
+          ]} />
+        </div>
+
+        <div className="tb-kit-card">
+          <b>Popover</b>
+          <span className="desc">Rich anchored card for filters, mini-forms, info.</span>
+          <Popover width={240} trigger={<Btn kind="soft" size="sm" icon="info">Show popover</Btn>}>
+            {(close) => (
+              <div>
+                <div style={{ fontWeight: 700, marginBottom: 6 }}>Quick note</div>
+                <p style={{ margin: "0 0 12px", fontSize: 13, color: "var(--text-muted)", lineHeight: 1.5 }}>Popovers hold any content — forms, menus, or details.</p>
+                <Btn kind="primary" size="sm" full onClick={close}>Got it</Btn>
+              </div>
+            )}
+          </Popover>
+        </div>
+      </div>
+
+      <Modal open={modal} onClose={() => setModal(false)} size="md" icon="store" title="Example modal" sub="A generic, reusable dialog"
+        footer={<><Btn kind="default" onClick={() => setModal(false)}>Cancel</Btn><Btn kind="primary" icon="check" onClick={() => { setModal(false); tbToast.success("Done"); }}>Save</Btn></>}>
+        <div className="tb-form">
+          <div className="tb-form-row"><label className="tb-label">Field label</label><input className="tb-input" placeholder="Type something…" /></div>
+          <div className="tb-form-row"><label className="tb-label">Notes</label><textarea className="tb-input" placeholder="Multi-line input…" /></div>
+        </div>
+      </Modal>
+
+      <Drawer open={drawer} onClose={() => setDrawer(false)} title="Example drawer" sub="Slides in from the right"
+        footer={<><Btn kind="default" onClick={() => setDrawer(false)}>Close</Btn><Btn kind="primary" icon="check" onClick={() => { setDrawer(false); tbToast.success("Applied"); }}>Apply</Btn></>}>
+        <p style={{ marginTop: 0, color: "var(--text-muted)", fontSize: 14, lineHeight: 1.6 }}>
+          Drawers are ideal for contextual forms like “Receive stock” or order details, without leaving the page.
+        </p>
+        <div className="tb-form">
+          <div className="tb-form-row"><label className="tb-label">Option</label>
+            <select className="tb-input"><option>Choice A</option><option>Choice B</option></select></div>
+        </div>
+      </Drawer>
     </div>
   );
 }

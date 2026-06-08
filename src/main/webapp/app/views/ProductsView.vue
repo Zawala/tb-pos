@@ -60,40 +60,7 @@
       </div>
     </div>
 
-    <Dialog v-model="showCreate" :options="{ title: 'New Product' }">
-      <template #body>
-        <div class="flex flex-col gap-3 p-4">
-          <input v-model="newProduct.sku" placeholder="SKU *" class="border border-outline-gray-2 rounded px-3 py-2 text-sm" />
-          <input v-model="newProduct.name" placeholder="Name *" class="border border-outline-gray-2 rounded px-3 py-2 text-sm" />
-          <input v-model="newProduct.category" placeholder="Category" class="border border-outline-gray-2 rounded px-3 py-2 text-sm" />
-          <input
-            v-model.number="newProduct.costPriceUsd"
-            type="number"
-            step="0.01"
-            placeholder="Cost Price (USD) *"
-            class="border border-outline-gray-2 rounded px-3 py-2 text-sm"
-          />
-          <input
-            v-model.number="newProduct.sellPriceUsd"
-            type="number"
-            step="0.01"
-            placeholder="Sell Price (USD) *"
-            class="border border-outline-gray-2 rounded px-3 py-2 text-sm"
-          />
-          <input
-            v-model.number="newProduct.reorderLevel"
-            type="number"
-            placeholder="Reorder Level"
-            class="border border-outline-gray-2 rounded px-3 py-2 text-sm"
-          />
-          <p v-if="createError" class="text-red-500 text-sm">{{ createError }}</p>
-        </div>
-      </template>
-      <template #actions>
-        <Button variant="subtle" @click="showCreate = false">Cancel</Button>
-        <Button :loading="creating" @click="submitCreate">Create</Button>
-      </template>
-    </Dialog>
+    <ProductModal :open="showCreate" @close="showCreate = false" @saved="onProductSaved" />
   </div>
 </template>
 
@@ -101,12 +68,14 @@
 import { ref, onMounted } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useInventoryStore } from '@/stores/inventory';
+import { tbToast } from '@/composables/useOverlay';
 import TbPageHead from '@/components/ui/TbPageHead.vue';
 import TbButton from '@/components/ui/TbButton.vue';
 import TbSearchField from '@/components/ui/TbSearchField.vue';
 import TbChip from '@/components/ui/TbChip.vue';
 import TbTile from '@/components/ui/TbTile.vue';
 import TbMoney from '@/components/ui/TbMoney.vue';
+import ProductModal from '@/components/products/ProductModal.vue';
 
 const inventory = useInventoryStore();
 const { products, categories } = storeToRefs(inventory);
@@ -114,9 +83,6 @@ const { products, categories } = storeToRefs(inventory);
 const q = ref('');
 const cat = ref('all');
 const showCreate = ref(false);
-const creating = ref(false);
-const createError = ref('');
-const newProduct = ref({ sku: '', name: '', category: '', costPriceUsd: 0, sellPriceUsd: 0, reorderLevel: 5, active: true });
 let debounce: ReturnType<typeof setTimeout>;
 
 function refetch() {
@@ -127,18 +93,8 @@ function onSearch() {
   debounce = setTimeout(refetch, 300);
 }
 
-async function submitCreate() {
-  creating.value = true;
-  createError.value = '';
-  try {
-    await inventory.createProduct(newProduct.value);
-    showCreate.value = false;
-    newProduct.value = { sku: '', name: '', category: '', costPriceUsd: 0, sellPriceUsd: 0, reorderLevel: 5, active: true };
-  } catch (e: any) {
-    createError.value = e?.response?.data?.detail || 'Failed to create product';
-  } finally {
-    creating.value = false;
-  }
+function onProductSaved(name: string) {
+  tbToast.success('Product added', name + ' is now in your catalog');
 }
 
 onMounted(() => {

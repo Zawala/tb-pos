@@ -1,0 +1,515 @@
+/* ============================================================
+   TbPos — overlay kit: modal sizes, confirm dialog,
+   toasts, drawer, dropdown menu / popover
+   ============================================================ */
+
+/* ---- generic modal sizing (extends .tb-overlay / .tb-modal) ---- */
+.tb-modal.size-sm {
+  max-width: 400px;
+}
+.tb-modal.size-md {
+  max-width: 480px;
+}
+.tb-modal.size-lg {
+  max-width: 640px;
+}
+.tb-modal.size-xl {
+  max-width: 800px;
+}
+.tb-modal-foot {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 16px 22px;
+  border-top: 1px solid var(--border);
+  background: var(--surface-2);
+}
+.tb-modal-foot.spread {
+  justify-content: space-between;
+}
+.tb-modal-head .sub {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+/* form bits reused inside modals/drawers */
+.tb-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.tb-form-row {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+.tb-form-row.two {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.tb-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+.tb-input {
+  height: 46px;
+  padding: 0 14px;
+  border-radius: var(--r);
+  border: 1px solid var(--border-strong);
+  background: var(--surface);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 14.5px;
+  box-shadow: var(--shadow-xs);
+  transition: all var(--speed);
+  width: 100%;
+}
+.tb-input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px var(--primary-ring);
+}
+textarea.tb-input {
+  height: auto;
+  padding: 12px 14px;
+  resize: vertical;
+  min-height: 84px;
+  line-height: 1.5;
+}
+
+/* ---- confirm dialog ---- */
+.tb-dialog {
+  width: 100%;
+  max-width: 420px;
+}
+.tb-dialog-body {
+  padding: 26px 24px 22px;
+  text-align: center;
+}
+.tb-dialog-ic {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  margin: 0 auto 16px;
+}
+.tb-dialog-ic.info {
+  background: var(--primary-soft);
+  color: var(--primary);
+}
+.tb-dialog-ic.success {
+  background: var(--success-soft);
+  color: var(--success);
+}
+.tb-dialog-ic.warning {
+  background: var(--warning-soft);
+  color: var(--warning);
+}
+.tb-dialog-ic.danger {
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+.tb-dialog h3 {
+  margin: 0 0 6px;
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+}
+.tb-dialog p {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 14px;
+  line-height: 1.55;
+}
+.tb-dialog-foot {
+  display: flex;
+  gap: 10px;
+  padding: 0 24px 24px;
+}
+.tb-dialog-foot .tb-btn {
+  flex: 1;
+}
+
+/* ---- toast stack ---- */
+.tb-toaster {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 18px;
+  z-index: 80;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 0 16px;
+  pointer-events: none;
+}
+.tb-toast {
+  pointer-events: auto;
+  width: 100%;
+  max-width: 380px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 13px 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-xl);
+  animation: tb-toast-in 280ms cubic-bezier(0.34, 1.4, 0.5, 1);
+  position: relative;
+  overflow: hidden;
+}
+.tb-toast::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: var(--primary);
+}
+.tb-toast.intent-success::before {
+  background: var(--success);
+}
+.tb-toast.intent-error::before {
+  background: var(--danger);
+}
+.tb-toast.intent-warning::before {
+  background: var(--warning);
+}
+.tb-toast.intent-info::before {
+  background: var(--primary);
+}
+.tb-toast.is-leaving {
+  animation: tb-toast-out 200ms var(--ease) forwards;
+}
+.tb-toast-ic {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  flex: none;
+}
+.intent-success .tb-toast-ic {
+  background: var(--success-soft);
+  color: var(--success);
+}
+.intent-error .tb-toast-ic {
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+.intent-warning .tb-toast-ic {
+  background: var(--warning-soft);
+  color: var(--warning);
+}
+.intent-info .tb-toast-ic {
+  background: var(--primary-soft);
+  color: var(--primary);
+}
+.tb-toast-main {
+  flex: 1;
+  min-width: 0;
+  padding-top: 1px;
+}
+.tb-toast-title {
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+.tb-toast-msg {
+  font-size: 12.8px;
+  color: var(--text-muted);
+  margin-top: 2px;
+  line-height: 1.4;
+}
+.tb-toast-action {
+  background: none;
+  border: none;
+  color: var(--primary);
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+  padding: 6px 4px 2px;
+}
+[data-theme='dark'] .tb-toast-action {
+  color: var(--accent-2);
+}
+.tb-toast-x {
+  border: none;
+  background: transparent;
+  color: var(--text-subtle);
+  width: 24px;
+  height: 24px;
+  border-radius: 7px;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  flex: none;
+  transition: all var(--speed);
+}
+.tb-toast-x:hover {
+  background: var(--surface-3);
+  color: var(--text);
+}
+
+@keyframes tb-toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+@keyframes tb-toast-out {
+  to {
+    opacity: 0;
+    transform: translateY(10px) scale(0.97);
+  }
+}
+
+/* ---- drawer / side sheet ---- */
+.tb-drawer-scrim {
+  position: absolute;
+  inset: 0;
+  background: var(--scrim);
+  backdrop-filter: blur(3px);
+  z-index: 50;
+  animation: tb-fade var(--speed) var(--ease);
+}
+.tb-drawer {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 420px;
+  max-width: 92%;
+  background: var(--surface);
+  border-left: 1px solid var(--border);
+  box-shadow: var(--shadow-xl);
+  z-index: 51;
+  display: flex;
+  flex-direction: column;
+  animation: tb-drawer-in 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+.tb-drawer.right {
+  right: 0;
+}
+.tb-drawer.left {
+  left: 0;
+  right: auto;
+  border-left: none;
+  border-right: 1px solid var(--border);
+  animation-name: tb-drawer-in-left;
+}
+.tb-drawer-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 22px;
+  border-bottom: 1px solid var(--border);
+  flex: none;
+}
+.tb-drawer-head h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+}
+.tb-drawer-head .sub {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+.tb-drawer-body {
+  padding: 22px;
+  overflow-y: auto;
+  flex: 1;
+}
+.tb-drawer-foot {
+  display: flex;
+  gap: 10px;
+  padding: 16px 22px;
+  border-top: 1px solid var(--border);
+  background: var(--surface-2);
+  flex: none;
+}
+.tb-drawer-foot .tb-btn {
+  flex: 1;
+}
+@keyframes tb-drawer-in {
+  from {
+    transform: translateX(40px);
+    opacity: 0.4;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+@keyframes tb-drawer-in-left {
+  from {
+    transform: translateX(-40px);
+    opacity: 0.4;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* ---- dropdown menu / popover ---- */
+.tb-pop-anchor {
+  position: relative;
+  display: inline-flex;
+}
+.tb-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  min-width: 200px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-xl);
+  padding: 7px;
+  z-index: 70;
+  animation: tb-menu-in 160ms var(--ease);
+}
+.tb-menu.align-left {
+  left: 0;
+}
+.tb-menu.align-right {
+  right: 0;
+}
+.tb-menu.up {
+  top: auto;
+  bottom: calc(100% + 8px);
+}
+@keyframes tb-menu-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+.tb-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  width: 100%;
+  padding: 10px 12px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: var(--r-sm);
+  text-align: left;
+  transition: background var(--speed);
+}
+.tb-menu-item:hover {
+  background: var(--surface-2);
+}
+.tb-menu-item .tb-ic {
+  color: var(--text-subtle);
+  flex: none;
+}
+.tb-menu-item.danger {
+  color: var(--danger);
+}
+.tb-menu-item.danger .tb-ic {
+  color: var(--danger);
+}
+.tb-menu-item.danger:hover {
+  background: var(--danger-soft);
+}
+.tb-menu-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--text-subtle);
+  padding: 8px 12px 4px;
+}
+.tb-menu-div {
+  height: 1px;
+  background: var(--border);
+  margin: 6px 4px;
+}
+.tb-menu-item .kbd {
+  margin-left: auto;
+  font-size: 11px;
+  color: var(--text-subtle);
+  font-weight: 600;
+}
+.tb-menu-item .tb-check {
+  margin-left: auto;
+  color: var(--primary);
+}
+
+/* ---- popover (rich anchored card) ---- */
+.tb-popover {
+  position: absolute;
+  top: calc(100% + 10px);
+  min-width: 240px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-xl);
+  padding: 16px;
+  z-index: 70;
+  animation: tb-menu-in 160ms var(--ease);
+}
+.tb-popover.align-right {
+  right: 0;
+}
+
+/* ---- demo catalog grid (settings → components) ---- */
+.tb-kit-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+}
+.tb-kit-card {
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--surface-2);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.tb-kit-card b {
+  font-size: 13.5px;
+}
+.tb-kit-card .desc {
+  font-size: 12.5px;
+  color: var(--text-muted);
+  flex: 1;
+  line-height: 1.45;
+}
+.tb-set-section code,
+.tb-kit-card code {
+  font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+  font-size: 0.88em;
+  background: var(--surface-3);
+  padding: 1px 5px;
+  border-radius: 5px;
+  color: var(--primary);
+}
+[data-theme='dark'] .tb-set-section code,
+[data-theme='dark'] .tb-kit-card code {
+  color: var(--accent-2);
+}

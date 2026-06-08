@@ -47,15 +47,13 @@ function App() {
   const [cashier, setCashier] = useState(window.TB.store.cashier);
   const [view, setView] = useState("checkout");
   const [cart, setCart] = useState([]);
-  const [toast, setToast] = useState(null);
 
   useEffect(() => { applyTheme(t); }, [t.theme, t.radius, t.accentLight, t.accentDark, t.device]);
 
   const cartCount = cart.reduce((s, l) => s + l.qty, 0);
 
   const onPaid = ({ total, method }) => {
-    setToast({ total, method });
-    setTimeout(() => setToast(null), 3400);
+    tbToast.success("Sale completed", window.TB.money(total) + " · " + method.toUpperCase() + " · receipt sent");
   };
 
   const screen = (() => {
@@ -75,7 +73,12 @@ function App() {
       onClick={() => setTweak("theme", t.theme === "dark" ? "light" : "dark")} title="Toggle theme" />
   );
   const initials = cashier.split(" ").map(w => w[0]).join("").slice(0, 2).toUpperCase();
-  const logout = () => { setAuthed(false); setView("checkout"); setCart([]); };
+  const logout = async () => {
+    const ok = await tbConfirm({ intent: "warning", icon: "logout", title: "Sign out?", message: "You'll return to the staff login. Any unsaved sale will be cleared.", confirmText: "Sign out", confirmIcon: "logout" });
+    if (!ok) return;
+    setAuthed(false); setView("checkout"); setCart([]);
+    tbToast.info("Signed out", "See you next shift, " + cashier.split(" ")[0] + ".");
+  };
   const avatar = <div className="tb-side-avatar" title={cashier + " — sign out"} onClick={logout}><Icon name="logout" size={18} /></div>;
 
   // ----- nav renders -----
@@ -160,17 +163,8 @@ function App() {
             {t.nav === "bottom" && BotNav}
           </>
         )}
+        <OverlayHost />
       </div>
-
-      {authed && toast && (
-        <div style={toastStyle}>
-          <span style={toastIcon}><Icon name="check" size={18} stroke={2.5} /></span>
-          <div>
-            <div style={{ fontWeight: 700, fontSize: 14 }}>Sale completed</div>
-            <div style={{ fontSize: 12.5, opacity: .8 }}>{window.TB.money(toast.total)} · {toast.method.toUpperCase()}</div>
-          </div>
-        </div>
-      )}
 
       <TweaksPanel title="Tweaks">
         <TweakSection label="Layout" />
@@ -188,7 +182,5 @@ function App() {
 }
 
 const badgeStyle = { position: "absolute", top: -7, right: -9, minWidth: 16, height: 16, padding: "0 4px", borderRadius: 999, background: "var(--danger)", color: "#fff", fontSize: 10, fontWeight: 700, display: "grid", placeItems: "center", lineHeight: 1 };
-const toastStyle = { position: "fixed", bottom: 24, left: "50%", transform: "translateX(-50%)", zIndex: 60, display: "flex", alignItems: "center", gap: 12, padding: "12px 18px 12px 12px", background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 16, boxShadow: "var(--shadow-xl)", animation: "tb-rise 240ms cubic-bezier(.4,0,.2,1)" };
-const toastIcon = { width: 38, height: 38, borderRadius: 12, background: "var(--success-soft)", color: "var(--success)", display: "grid", placeItems: "center", flex: "none" };
 
 ReactDOM.createRoot(document.getElementById("root")).render(<App />);

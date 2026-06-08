@@ -9,6 +9,7 @@
 @import './pos/components.css';
 @import './pos/layout.css';
 @import './pos/screens.css';
+@import './pos/overlays.css';
 @import './pos/login.css';
 
 /* Scan frappe-ui's own components so the utility classes they use

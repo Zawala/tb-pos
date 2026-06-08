@@ -6,6 +6,8 @@ function Checkout({ cart, setCart, onPaid }) {
   const [cartOpen, setCartOpen] = useState(false);
   const [payOpen, setPayOpen] = useState(false);
   const [discountPct, setDiscountPct] = useState(0);
+  const [custOpen, setCustOpen] = useState(false);
+  const [customer, setCustomer] = useState(null);
 
   const items = useMemo(() => {
     let list = TB.products;
@@ -101,9 +103,14 @@ function Checkout({ cart, setCart, onPaid }) {
         </div>
         <div className="tb-cart-head">
           <h2><Icon name="cart" size={20} /> Current Sale {count > 0 && <span className="tb-cart-count">{count}</span>}</h2>
-          {cart.length > 0 && <IconBtn name="trash" kind="ghost" onClick={() => setCart([])} title="Clear" />}
+          {cart.length > 0 && <IconBtn name="trash" kind="ghost" onClick={async () => {
+            const ok = await tbConfirm({ intent: "danger", icon: "trash", title: "Clear this sale?", message: `${count} item${count !== 1 ? "s" : ""} will be removed from the current cart. This can't be undone.`, confirmText: "Clear cart", confirmIcon: "trash" });
+            if (ok) { setCart([]); setDiscountPct(0); tbToast.info("Cart cleared"); }
+          }} title="Clear" />}
         </div>
-        <div className="tb-cust"><Icon name="user" size={18} /> Add customer · Walk-in</div>
+        <div className="tb-cust" onClick={() => setCustOpen(true)}>
+          <Icon name="user" size={18} /> {customer ? customer.name + " · " + customer.phone : "Add customer · Walk-in"}
+        </div>
 
         {cart.length === 0 ? (
           <div className="tb-cart-empty">
@@ -144,7 +151,7 @@ function Checkout({ cart, setCart, onPaid }) {
           </div>
           <div className="tb-cart-actions">
             <Btn kind="default" icon="pct" onClick={cycleDiscount} title="Discount">{discountPct > 0 ? discountPct + "%" : ""}</Btn>
-            <Btn kind="default" icon="pause" title="Hold sale" />
+            <Btn kind="default" icon="pause" title="Hold sale" disabled={cart.length === 0} onClick={() => { tbToast.warning("Sale held", count + " items parked · resume from Orders", { icon: "pause" }); setCart([]); setDiscountPct(0); }} />
             <Btn kind="primary" size="md" disabled={cart.length === 0} onClick={() => setPayOpen(true)}>
               Charge <Money v={total} />
             </Btn>
@@ -157,6 +164,10 @@ function Checkout({ cart, setCart, onPaid }) {
           onClose={() => setPayOpen(false)}
           onComplete={(method) => { setPayOpen(false); onPaid({ total, method, count }); setCart([]); setDiscountPct(0); }} />
       )}
+
+      <CustomerModal open={custOpen} current={customer} onClose={() => setCustOpen(false)}
+        onSave={(c) => { setCustomer(c); setCustOpen(false); tbToast.success("Customer added", c.name + " attached to this sale"); }}
+        onClear={() => { setCustomer(null); setCustOpen(false); tbToast.info("Customer removed"); }} />
     </div>
   );
 }
@@ -281,3 +292,41 @@ function Payment({ total, subtotal, tax, discount, count, onClose, onComplete })
 }
 
 window.Checkout = Checkout;
+
+function CustomerModal({ open, current, onClose, onSave, onClear }) {
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
+  useEffect(() => { if (open) { setName(current?.name || ""); setPhone(current?.phone || ""); setEmail(current?.email || ""); } }, [open]);
+  return (
+    <Modal open={open} onClose={onClose} size="sm" icon="user" title="Customer"
+      sub="Attach a customer to this sale"
+      footer={<>
+        {current && <Btn kind="ghost" onClick={onClear}>Remove</Btn>}
+        <div style={{ flex: 1 }} />
+        <Btn kind="default" onClick={onClose}>Cancel</Btn>
+        <Btn kind="primary" icon="check" disabled={!name.trim()} onClick={() => onSave({ name: name.trim(), phone: phone.trim() || "—", email: email.trim() })}>Save</Btn>
+      </>}>
+      <div className="tb-form">
+        <div className="tb-form-row">
+          <label className="tb-label">Full name</label>
+          <input className="tb-input" value={name} onChange={e => setName(e.target.value)} placeholder="e.g. Maya Chen" autoFocus />
+        </div>
+        <div className="tb-form-row two">
+          <div className="tb-form-row">
+            <label className="tb-label">Phone</label>
+            <input className="tb-input" value={phone} onChange={e => setPhone(e.target.value)} placeholder="555-0100" />
+          </div>
+          <div className="tb-form-row">
+            <label className="tb-label">Loyalty</label>
+            <input className="tb-input" defaultValue="Silver" />
+          </div>
+        </div>
+        <div className="tb-form-row">
+          <label className="tb-label">Email <span style={{ fontWeight: 400, color: "var(--text-subtle)" }}>(for e-receipt)</span></label>
+          <input className="tb-input" value={email} onChange={e => setEmail(e.target.value)} placeholder="name@email.com" />
+        </div>
+      </div>
+    </Modal>
+  );
+}
